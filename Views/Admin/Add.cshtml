@@ -1,0 +1,147 @@
+﻿@using ASP_ComplexEx.Models
+@model Room
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { @class = "form form--center", enctype = "multipart/form-data" }))
+{
+    @Html.TextBox("Id", "", new { type = "hidden" })
+
+    <section class="section-dark">
+        <div class="container">
+            <div class="form__title">@Html.Label("Logo")</div>
+            <div class="logo form__logo">
+                <div class="form__input">
+                    <input type="file" id="Logo" name="Logo" class="form__file" accept="image/jpeg,image/png,image/gif" />
+                    <label for="Logo"><span>NEW LOGO</span></label>
+                </div>
+                <div class="form__preview" id="preview"> </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="description form__description">
+            <div class="group form__group form__center">
+                <b class="form__title">@Html.Label("Description")</b>
+                <textarea class="form__textarea" name="Description"></textarea>
+            </div>
+
+
+            <div class="group form__group">
+                @Html.EditBlockPrint("Duration", @Html.EditorFor(r => r.Duration).ToString(), "/Images/clock_dark.svg");
+                @Html.EditBlockPrint("Rating", @Html.EditorFor(r => r.Rating).ToString(), "/Images/export_dark.svg");
+                @Html.EditBlockPrint("FearLevel", @Html.DropDownListFor(r => r.FearLevel, EnumHelper.GetSelectList(typeof(Level))).ToString(), "/Images/fear_dark.svg");
+                @Html.EditBlockPrint("DifficultyLevel", @Html.DropDownListFor(r => r.DifficultyLevel, EnumHelper.GetSelectList(typeof(Level))).ToString(), "/Images/thinking_dark.svg");
+            </div>
+
+            <div class="group form__group">
+                @Html.EditBlockPrint("Title", @Html.EditorFor(r => r.Title).ToString(), "/Images/title_dark.svg");
+                @Html.EditBlockPrint("MinPlayers", @Html.EditorFor(r => r.MinPlayers).ToString(), "/Images/team_dark.svg");
+                @Html.EditBlockPrint("MaxPlayers", @Html.EditorFor(r => r.MaxPlayers).ToString(), "/Images/team_dark.svg");
+            </div>
+
+            <div class="group form__group">
+                @Html.EditBlockPrint("Address", @Html.EditorFor(r => r.Address).ToString(), "/Images/address_dark.svg");
+                @Html.EditBlockPrint("PhoneNumber", @Html.EditorFor(r => r.PhoneNumber).ToString(), "/Images/phone_dark.svg");
+                @Html.EditBlockPrint("Email", @Html.EditorFor(r => r.Email).ToString(), "/Images/email_dark.svg");
+            </div>
+        </div>
+    </section>
+
+    <section class="section-dark">
+        <div class="container">
+            <div class="form__title">@Html.Label("Images")</div>
+            <div class="form__title">
+                <div class="form__input">
+                    <input type="file" id="Images" class="form__file" accept="image/jpeg,image/png,image/gif" name="images"
+                           data-multiple-caption="{count} files selected" multiple />
+                    <label for="Images"><span>New image</span></label>
+                </div>
+            </div>
+            <div class="images form__images" id="ImagesBlock">
+                @*@foreach (var photo in Model.Images)
+            {
+                <div class="form__image_parameter">
+                    <img src="@Url.Content(photo.Path)" class="form__full_logo" alt=@photo.Title />
+                    <button class="button form__delete">Delete</button>
+                </div>
+            }*@
+            </div>
+            <input type="submit" value="NEW ROOM" class="button form__submit" />
+        </div>
+    </section>
+
+
+
+}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $(".form__delete-button").on("click", function (e) {
+
+            })
+
+            var inputImages = document.getElementById("Images");
+
+
+            $(inputImages).on('change', function (e) {
+                for (let item of e.target.files) {
+                    let div = document.createElement("div");
+                    $(div).attr("class", "form__image_parameter");
+                    var fReader = new FileReader();
+                    fReader.readAsDataURL(item);
+                    fReader.onloadend = function (event) {
+                        $(div).css("background-image", `url('${event.target.result}')`);
+                    }
+                    let button = document.createElement("button");
+                    $(button).attr("class", "button form__delete");
+                    $(button).text("Delete");
+                    $(div).append(button);
+                    $("#ImagesBlock").append(div);
+                }
+
+            });
+
+
+            var input = document.getElementById("Logo")
+            var label = input.nextElementSibling,
+                labelVal = label.innerHTML;
+
+            $(input).on('change', function (e) {
+                var fileName = '';
+
+                fileName = e.target.value.split('\\').pop();
+                var inputFile = e.target;
+                var fReader = new FileReader();
+                fReader.readAsDataURL(inputFile.files[0]);
+                fReader.onloadend = function (event) {
+                    $("#preview").css("background-image", `url('${event.target.result}')`);
+                }
+
+                if (fileName) {
+
+                    var split = fileName.split('.');
+                    var path = split[0];
+                    var extension = split[1];
+                    var fileNameStart;
+                    var fileNameEnd;
+                    if (fileName.length > 12) {
+                        fileNameStart = path.substring(0, 12);
+                        fileNameEnd = path.substring(path.length - 2, path.length);
+                        label.querySelector('span').innerHTML = fileNameStart + '...' + fileNameEnd + '.' + extension;
+                    }
+                    else {
+                        label.querySelector('span').innerHTML = path + '.' + extension;
+                    }
+
+                }
+                else
+                    label.innerHTML = labelVal;
+            });
+        })
+    </script>
+}
+

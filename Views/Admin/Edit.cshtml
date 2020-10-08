@@ -1,0 +1,180 @@
+﻿@using ASP_ComplexEx.Models
+@model Room
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { @class = "form form--center", enctype = "multipart/form-data" }))
+{
+    @Html.TextBox("Id", "", new { type = "hidden" })
+
+    <section class="section-dark">
+        <div class="container">
+            <div class="form__title">@Html.Label("Logo")</div>
+            <div class="logo form__logo">
+                <div class="form__input">
+                    <input type="file" id="Logo" name="Logo" class="form__file" accept="image/jpeg,image/png,image/gif" />
+                    <label for="Logo"><span>NEW LOGO</span></label>
+                </div>
+                <div style="background-image: url('@Url.Content(@Model.Images.Where(i=>i.IsLogo==true).FirstOrDefault().Path)')" class="form__preview" id="preview"> </div>
+            </div>
+        </div>
+        
+    </section>
+
+    <section>
+        <div class="description form__description">
+            <div class="group form__group form__center">
+                <b class="form__title">@Html.Label("Description")</b>
+                <textarea class="form__textarea" name="Description">@Model.Description</textarea>
+            </div>
+
+
+            <div class="group form__group">
+                @Html.EditBlockPrint("Duration", @Html.EditorFor(r => r.Duration).ToString(), "/Images/clock_dark.svg");
+                @Html.EditBlockPrint("Rating", @Html.EditorFor(r => r.Rating).ToString(), "/Images/export_dark.svg");
+                @Html.EditBlockPrint("FearLevel", @Html.DropDownListFor(r => r.FearLevel, EnumHelper.GetSelectList(typeof(Level))).ToString(), "/Images/fear_dark.svg");
+                @Html.EditBlockPrint("DifficultyLevel", @Html.DropDownListFor(r => r.DifficultyLevel, EnumHelper.GetSelectList(typeof(Level))).ToString(), "/Images/thinking_dark.svg");
+            </div>
+
+            <div class="group form__group">
+                @Html.EditBlockPrint("Title", @Html.EditorFor(r => r.Title).ToString(), "/Images/title_dark.svg");
+                @Html.EditBlockPrint("MinPlayers", @Html.EditorFor(r => r.MinPlayers).ToString(), "/Images/team_dark.svg");
+                @Html.EditBlockPrint("MaxPlayers", @Html.EditorFor(r => r.MaxPlayers).ToString(), "/Images/team_dark.svg");
+            </div>
+
+            <div class="group form__group">
+                @Html.EditBlockPrint("Address", @Html.EditorFor(r => r.Address).ToString(), "/Images/address_dark.svg");
+                @Html.EditBlockPrint("PhoneNumber", @Html.EditorFor(r => r.PhoneNumber).ToString(), "/Images/phone_dark.svg");
+                @Html.EditBlockPrint("Email", @Html.EditorFor(r => r.Email).ToString(), "/Images/email_dark.svg");
+            </div>
+
+        </div>
+    </section>
+
+    <section class="section-dark">
+        <div class="container">
+            <div class="form__images-all">
+                <div class="form__images">
+                    <div class="form__title">Images</div>
+                    @foreach (var photo in Model.Images.Where(i => !i.IsLogo))
+                    {
+                        <div class="form__image_parameter" style="background-image: url('@photo.Path')">
+                            <input type="file" class="form__file" />
+                        </div>
+                    }
+                </div>
+
+                <div class="form__images" id="ImagesBlock">
+                    <div class="form__input">
+                        <input type="file" id="1" name="NewImages" class="form__file" accept="image/jpeg,image/png,image/gif" />
+                        <label for="1"><span>New image</span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="submit" value="Save room" class="button form__submit" />
+        </div>
+    </section>
+
+
+}
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+
+            $(".form__delete").on("click", function (e) {
+                e.preventDefault();
+                var deleteImage = e.target.previousSibling;
+            })
+
+
+
+            $("input[name = 'NewImages']").on('change', changeInput);
+
+            function changeInput(e) {
+                var fileName = '';
+                var label = e.target.nextElementSibling,
+                fileName = e.target.value.split('\\').pop();
+                if (fileName) {
+
+                    var split = fileName.split('.');
+                    var path = split[0];
+                    var extension = split[1];
+                    var fileNameStart;
+                    var fileNameEnd;
+                    if (fileName.length > 12) {
+                        fileNameStart = path.substring(0, 12);
+                        fileNameEnd = path.substring(path.length - 2, path.length);
+                        label.querySelector('span').innerHTML = fileNameStart + '...' + fileNameEnd + '.' + extension;
+                    }
+                    else {
+                        label.querySelector('span').innerHTML = path + '.' + extension;
+                    }
+
+                }
+                if ($(e.target).attr("id") == $("#ImagesBlock").children(".form__input").length) {
+                    let div = document.createElement("div");
+                    $(div).attr("class", "form__input");
+                    let hiddenInput = document.createElement("input");
+                    $(hiddenInput).attr("class", "form__file");
+                    $(hiddenInput).attr("type", "file");
+                    $(hiddenInput).attr("name", "NewImages");
+                    $(hiddenInput).attr("id", $("#ImagesBlock").children(".form__input").length+1);
+                    $(hiddenInput).attr("accept", "image/jpeg,image/png,image/gif");
+                    $(hiddenInput).on("change", changeInput)
+                    let newLabel = document.createElement("label");
+                    $(newLabel).attr("for", $("#ImagesBlock").children(".form__input").length+1);
+                    let span = document.createElement("span");
+                    $(span).text("New image");
+                    $(newLabel).append(span);
+                    $(div).append(hiddenInput);
+                    $(div).append(newLabel);
+                    $("#ImagesBlock").append(div);
+                }
+                
+
+                
+            }
+
+
+            var input = document.getElementById("Logo")
+            var label = input.nextElementSibling,
+                labelVal = label.innerHTML;
+
+            $(input).on('change', function (e) {
+                var fileName = '';
+
+                fileName = e.target.value.split('\\').pop();
+                var inputFile = e.target;
+                var fReader = new FileReader();
+                fReader.readAsDataURL(inputFile.files[0]);
+                fReader.onloadend = function (event) {
+                    $("#preview").css("background-image", `url('${event.target.result}')`);
+                }
+
+                if (fileName) {
+
+                    var split = fileName.split('.');
+                    var path = split[0];
+                    var extension = split[1];
+                    var fileNameStart;
+                    var fileNameEnd;
+                    if (fileName.length > 12) {
+                        fileNameStart = path.substring(0, 12);
+                        fileNameEnd = path.substring(path.length - 2, path.length);
+                        label.querySelector('span').innerHTML = fileNameStart + '...' + fileNameEnd + '.' + extension;
+                    }
+                    else {
+                        label.querySelector('span').innerHTML = path + '.' + extension;
+                    }
+
+                }
+                else
+                    label.innerHTML = labelVal;
+            });
+        })
+    </script>
+}
+

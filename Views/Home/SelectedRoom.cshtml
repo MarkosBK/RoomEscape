@@ -1,0 +1,37 @@
+﻿@model ASP_ComplexEx.Models.Room
+@using ASP_ComplexEx.Models;
+@{
+    ViewBag.Title = "SelectedRoom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="preview preview--position" style="background-image: url('@Model.Images.Where(i=>i.IsLogo==true).First().Path')">
+    <div class="preview__above"></div>
+</div>
+<div class="room room--position">
+    <p class="room__title" align="center">@Model.Title</p>
+    <section class="room__info">
+        <div class="room__logo" style="background-image: url('@Model.Images.Where(i=>i.IsLogo==true).First().Path')"></div>
+
+        <div class="room__description">
+            @Model.Description;
+        </div>
+
+        <div class="room__parameters">
+            @Html.ParameterBlockPrint("/Images/clock.svg", "TIME LIMIT", Model.Duration.ToString() + " MINS")
+            @Html.ParameterBlockPrint("/Images/thinking.svg", "DIFFICULTY", Model.DifficultyLevel.ToString())
+            @Html.ParameterBlockPrint("/Images/team.svg", "GROUPE SIZE", Model.MinPlayers.ToString() + Model.MaxPlayers.ToString() + " PPL")
+            @Html.ParameterBlockPrint("/Images/export.svg", "ESCAPE RATE", Model.Rating.ToString() + "%")
+        </div>
+    </section>
+
+
+    <div class="gallery gallery--position">
+        <h1 align="center">ROOM GALLERY</h1>
+        @Html.GalleryPrint(Model.Images.ToList());
+    </div>
+</div>
+
+
+@section Scripts{}

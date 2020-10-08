@@ -1,0 +1,54 @@
+﻿@using ASP_ComplexEx.Models
+@model List<Room>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="display: flex; justify-content:center;">
+    <span class="main-title">MASTERMIND ROOM ESCAPE</span>
+</div>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "filter-block" }))
+{
+    <div class="filter-block__item">
+        <label>FEAR LEVEL</label>
+        <select name="Fear" >
+            <option>All</option>
+            @foreach (string item in Enum.GetNames(typeof(Level)))
+            {
+                <option>@item</option>
+            }
+        </select>
+    </div>
+
+    <div class="filter-block__item">
+        <label>DIFFICULTY LEVEL</label>
+        <select name="Difficulty">
+            <option>All</option>
+            @foreach (string item in Enum.GetNames(typeof(Level)))
+            {
+                <option>@item</option>
+            }
+        </select>
+    </div>
+
+    <div class="filter-block__item">
+        <label>MIN PLAYERS</label>
+        <input type="number" name="MinPlayers" min="1" value=@ViewBag.MinPlayers/>
+    </div>
+
+    <div class="filter-block__item">
+        <label>MAX PLAYERS</label>
+        <input type="number" name="MaxPlayers" min="1" value=@ViewBag.MaxPlayers/>
+    </div>
+    <input type="submit" value="Find" class="button filter-block__submit" />
+}
+
+
+<div class="rooms rooms--position">
+    @foreach (Room room in Model)
+    {
+        @Html.RoomPrint(room, false);
+    }
+</div>
+@section Scripts{}

@@ -1,0 +1,29 @@
+﻿@using ASP_ComplexEx.Models
+@model List<Room>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="rooms rooms--position">
+    @foreach (Room room in Model)
+    {
+        <div class="rooms__box">
+            @Html.RoomPrint(room, true)
+            <div class="rooms__buttons">
+                <a href="@Url.Action("Delete", "Admin", new { id=room.Id })" style="display: flex; justify-content: center;">
+                    <img src="~/Images/dustbin.svg" alt="" width="25"/>
+                    <p style="letter-spacing: 2px;">Delete</p>
+                </a>
+                
+                <a href="@Url.Action("Edit", "Admin", new { id=room.Id })" style="display: flex; justify-content: center">
+                    <img src="~/Images/pencil.svg" alt="" width="30"/>
+                    <p style="letter-spacing: 2px;">Edit</p>
+                </a>
+            </div>
+        </div>
+    }
+</div>
+@Html.ActionLink("NEW ROOM", "Add", "Admin", null, new { @class = "button add-link" });
+
+@section Scripts{}

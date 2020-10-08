@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <!-- jQuery 1.8 or later, 33 KB -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Fotorama from CDNJS, 19 KB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+    <!--Style file-->
+    <link href=@Url.Content("~/Content/css/mainstyle.css") rel="stylesheet" />
+
+    <!--font-family: 'Ranchers', cursive;-->
+    <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
+    <!--font-family: 'Roboto', sans-serif;-->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    @*font-family: 'Amatic SC', cursive;*@
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
+    @*font-family: 'Permanent Marker', cursive;*@
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+    <a href="#" class="novigate-up-button"></a>
+    <header class="header">
+            <div class="header__body">
+                <a href="~/Home/Index" class="header__logo">
+                    <img src="~/Images/logo.svg" />
+                </a>
+
+                <div class="header__burger">
+                    <span></span>
+                </div>
+
+                <nav class="header__menu">
+                    <ul class="header__list">
+                        <li>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "header__link" })</li>
+                        <li>@Html.ActionLink("Rooms", "Index", "Home", null, new { @class = "header__link" })</li>
+                        <li>@Html.ActionLink("Book New", "Index", "Home", null, new { @class = "header__link" })</li>
+                        <li>@Html.ActionLink("FAQs & Parking", "Index", "Home", null, new { @class = "header__link" })</li>
+                        <li>@Html.ActionLink("Groups", "Index", "Home", null, new { @class = "header__link" })</li>
+                        <li>@Html.ActionLink("Admin", "Index", "Admin", null, new { @class = "header__link" })</li>
+                        <li>@Html.ActionLink("Contact us", "Index", "Home", null, new { @class = "header__link" })</li>
+                    </ul>
+                </nav>
+            </div>
+       
+    </header>
+    <div class="content">
+            @RenderBody()
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $(".header__burger").on("click", function (event) {
+                $(".header__burger, .header__menu").toggleClass("active");
+                $("body").toggleClass("lock")
+            })
+        })
+    </script>
+    @RenderSection("Scripts")
+</body>
+    </html>

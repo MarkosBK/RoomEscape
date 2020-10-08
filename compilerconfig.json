@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "Content/css/editstyle.css",
+    "inputFile": "Content/css/editstyle.scss"
+  },
+  {
+    "outputFile": "Content/css/utilsstyle.css",
+    "inputFile": "Content/css/utilsstyle.scss"
+  },
+  {
+    "outputFile": "Content/css/homestyle.css",
+    "inputFile": "Content/css/homestyle.scss"
+  },
+  {
+    "outputFile": "Content/css/mainstyle.css",
+    "inputFile": "Content/css/mainstyle.scss"
+  }
+]
